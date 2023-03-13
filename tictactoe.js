@@ -68,52 +68,87 @@ let combinacionesGanadoras = [
  * CONTENIDO NUEVO
  * -------------------------------------------------------------------------
  */
-let pipo=true;
+let turno=true;
 let comprobacion;
 let p;
-let num2=0
-let num3=0;
+let puntX=0;
+let puntO=0;
 let div;
-let combinacion=[[],[]];
+let combinacionO=[];
+let combinacionX=[];
+let ganador;
+
+
 function agregarFicha(numero){    
     console.log('Has hecho un click en la casilla ' + numero);
-    if (pipo){
+    if (turno){
         casillas[numero].textContent="X";
-        combinacion[0].push(numero);
-        pipo=false;
+        combinacionX.push(numero);
+        turno=false;
+        casillas[numero].removeAttribute('onclick');
     }else{
         casillas[numero].textContent="O";
-        pipo=true;
-        combinacion[1].push(numero);
+        turno=true;
+        combinacionO.push(numero);
+        casillas[numero].removeAttribute('onclick');
     }
     
-    for(let i=0;i<combinacionesGanadoras.length;i++){
-        console.log(combinacionesGanadoras[i][0]);
-        console.log(combinacion[0][0]);
-        if(combinacionesGanadoras[i][0].includes(combinacion[0][0])){
+    for(let i=0;i<7;i++){
             for(let j=0;j<3;j++){
-                if(combinacionesGanadoras[i][j]==combinacion[i][j]){
-                    num2=num2+1;
+                for(let l=0;l<combinacionX.length;l++){
+                    if(combinacionesGanadoras[i][j]==combinacionX[l]){
+                        puntX++;
+                    }else if(combinacionesGanadoras[i][j]==combinacionO[l]){
+                        puntO++;
+                    }
                 }
             }
-            num3++;
-        }else if(combinacionesGanadoras[i][0]==combinacion[1][0]){
-
-        }
-        
+            if(puntX>=3){
+                ganador(0);
+                puntX=0;
+                for(let k=0;k<9;k++){
+                    casillas[k].removeAttribute('onclick');
+                }
+            }else if(puntX<3){
+                puntX=0;
+            }
+            
+            if(puntO>=3){
+                ganador(1);
+                puntO=0;
+                for(let k=0;k<9;k++){
+                    casillas[k].removeAttribute('onclick');
+                }
+            }else if(puntO<3){
+                puntO=0;
+            }
     }
-    
+
+    function ganador(num){
+        if(num==0){
+            window.alert('J1 Win');
+        }else if(num==1){
+            window.alert('J2 Win');
+        }
+    }
     /**
      * Cuando se activa esta funcion por el evento del click
      * es necesario eliminar el click del div
      */
     
-    casillas[numero].removeAttribute('onclick')
-    console.log(combinacion[0]);
-    console.log(combinacion[1]);
-    console.log(num3);
+    console.log(combinacionX);
+    console.log(combinacionO);
 }
-
+function sPartida(){
+    let resetAll = document.createElement("button");
+    for(let i=0;i<9;i++){
+        casillas[i].textContent="";
+        casillas[i].setAttribute("onclick",`agregarFicha(${i})`);
+    }
+    combinacionO=[];
+    combinacionX=[];
+    turno=true;
+}
 /**
  * Para acabar el juego necesitamos:
  * 1. Colocar ficha
