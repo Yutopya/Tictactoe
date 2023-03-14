@@ -6,60 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        p{
-            border: 1px solid black;
-            padding: 15px;
-        }
         body{
-            
+            background-color: rgb(225, 176, 85);
         }
-        div.botonsito{
+        div.cosasbotonsito{
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            padding-top: 10px;
         }
-        div.contenido{
+        .contenido{
             justify-content: center;
             display: flex;
             flex-wrap: wrap;
+            gap: 50px;
+            padding: 20px;
         }
         .error{
             background-color: red;
             color: white;
             font-size: xx-large;
         }
-
         .correcto{
             background-color: green;
             color: white;
             font-size: xx-large;
         }
-
         .tablero{
+            background-color: white;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             border: 1px solid black;
             border-radius: 2em;
             gap: 10px;
-            height: 680px;
-            width: 680px;
+            height: 480px;
+            width: 480px;
             padding-top: 35px;
         }
         .casilla{
             border: 1px solid black;
-            height: 180px;
-            width: 180px;
-            font-size: 180px;
+            height: 120px;
+            width: 120px;
+            font-size: 120px;
             text-align: center;
-
         }
-        
+        .verdesito{
+            color:green;
+        }
+        .rojito{
+            color:brown;
+        }
     </style>
 </head>
 <body>
-    <div>
-        
+    <div class="contenido">
+        <div class="Jugadores">Jugador 1:  0</div>
+        <div class="Jugadores">Jugador 2:  0</div>
+        <div class="turno">Jugador 1 esta jugando</div>
     </div>
     <div class="contenido">
         <div class="tablero">
@@ -77,8 +81,8 @@
     
 </body>
 <footer>
-    <div class="botonsito">
-        <button onclick="sPartida()">Reset</button>
+    <div class="cosasbotonsito">
+        <button class="boton" onclick="sPartida()">Reset</button>
     </div> 
 </footer>
 <script src="tictactoe.js"></script>

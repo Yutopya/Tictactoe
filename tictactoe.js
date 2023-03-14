@@ -70,32 +70,77 @@ let combinacionesGanadoras = [
  */
 let turno=true;
 let comprobacion;
-let p;
+let p, div;
 let puntX=0;
 let puntO=0;
-let div;
 let combinacionO=[];
 let combinacionX=[];
-let ganador;
+let puntosO;
+let puntosX;
+let valganador=false;
+let puntuacion= document.getElementsByClassName("Jugadores");
+let boton= document.getElementsByClassName("boton");
+let turnoclase= document.getElementsByClassName("turno");
+let pO=0;
+let pX=0;
 
+/*
+
+Function que:
+- añade contenido a una casilla
+- da color al contenido de esa casilla
+- compara arrays para saber si algun jugador a ganado
+
+@param numero de la casilla presionada
+@return void
+*/
 
 function agregarFicha(numero){    
     console.log('Has hecho un click en la casilla ' + numero);
-    if (turno){
+    if(turno){
+        turnoclase[0].textContent="Jugador 2 esta jugando";
         casillas[numero].textContent="X";
+
+        //Guarda el numero de la casilla seleccionada en un array solo de X's
         combinacionX.push(numero);
+
+        //Quita el evento "onclick" ya que no se deberían poner mas casillas ahí
+        casillas[numero].removeAttribute('onclick');
+
+        //Le añade una clase que le pone un color
+        casillas[numero].classList.add('verdesito');
+
+        //Cambia de turno
         turno=false;
-        casillas[numero].removeAttribute('onclick');
     }else{
+        turnoclase[0].textContent="Jugador 1 esta jugando";
         casillas[numero].textContent="O";
-        turno=true;
+
+        //Guarda el numero de la casilla seleccionada en un array solo de O's
         combinacionO.push(numero);
+
+        //Quita el evento "onclick" ya que no se deberían poner mas casillas ahí
         casillas[numero].removeAttribute('onclick');
+
+        //Le añade una clase que le pone un color
+        casillas[numero].classList.add('rojito');
+
+        //Cambia de turno
+        turno=true;
     }
     
+    //Bucle para recorrer el array de combinacionesGanadoras
     for(let i=0;i<7;i++){
+
+            //Bucle para recorrer las combinaciones de cada posicion del array anterior
             for(let j=0;j<3;j++){
+
+                //Bucle para recorrer las combinaciones introducidas en la combinacion X
+                //Es combinacionX en concreto porque siempre va a tener el mayor numero de items en el array
                 for(let l=0;l<combinacionX.length;l++){
+
+                    //Si un numero de la combinacion correspondiente coincide con un numero en la combinacion ganadora,
+                    //se suma 1 a un contador
                     if(combinacionesGanadoras[i][j]==combinacionX[l]){
                         puntX++;
                     }else if(combinacionesGanadoras[i][j]==combinacionO[l]){
@@ -103,51 +148,104 @@ function agregarFicha(numero){
                     }
                 }
             }
+            //Si ese contador llega a 3 o mas, significa que el array correspondiente tiene una combinacion ganadora,
+            //por lo tanto, gana ese jugador
+
             if(puntX>=3){
+
+                //Se llama a la funcion ganador asignandole el id del jugador que ha ganado
                 ganador(0);
                 puntX=0;
-                for(let k=0;k<9;k++){
-                    casillas[k].removeAttribute('onclick');
-                }
+                valganador=true;
+
+            //Si no, se resetea el contador para comprobar la siguiente combinacion
             }else if(puntX<3){
                 puntX=0;
             }
             
+            //Lo mismo pero con el otro jugador
             if(puntO>=3){
                 ganador(1);
                 puntO=0;
-                for(let k=0;k<9;k++){
-                    casillas[k].removeAttribute('onclick');
-                }
+                valganador=true;
             }else if(puntO<3){
                 puntO=0;
             }
     }
 
-    function ganador(num){
-        if(num==0){
-            window.alert('J1 Win');
-        }else if(num==1){
-            window.alert('J2 Win');
-        }
+    //Si se ha llenado el tablero y no ha ganado ninguno de los 2 jugadores, es empate
+    if(combinacionX.length+combinacionO.length>=9 && valganador==false){
+        window.alert('Empate');
+
+        //Cambia el boton de reset para indicar que se puede pasar a la siguiente partida
+        boton[0].textContent="Siguiente partida";
+    }else if(valganador){
+        boton[0].textContent="Siguiente partida";
     }
-    /**
-     * Cuando se activa esta funcion por el evento del click
-     * es necesario eliminar el click del div
-     */
-    
-    console.log(combinacionX);
-    console.log(combinacionO);
 }
+
+/*
+
+Funcion que declara un ganador, bloquea el tablero y se suma la puntuacion
+
+@param numero del jugador que ha ganado (0 o 1)
+@return void
+*/
+
+function ganador(num){
+
+    //num podría ser un booleano, pero era bastante confuso asique decidí ir por numero binario
+
+    if(num==0){
+
+        //Cuando algun jugador gana, se muestra un mensaje de alerta
+        window.alert('Jugador 1 ha ganado');
+
+        //Se elimina todos los atributos on click para que no se puedan seguir poniendo fichas
+        for(let k=0;k<9;k++){
+            casillas[k].removeAttribute('onclick');
+        }
+
+        //Y se añade un +1 al contador al jugador correspondiente
+        pX=pX+1;
+        puntuacion[0].textContent="Jugador 1: "+pX;
+    }else if(num==1){
+
+        //Lo mismo pero con el otro jugador
+        window.alert('Jugador 2 ha ganado');
+        for(let k=0;k<9;k++){
+            casillas[k].removeAttribute('onclick');
+        }
+        pO++;
+        puntuacion[1].textContent="Jugador 2: "+pO;
+    }
+}
+
+/*
+
+Funcion que resetea el tablero
+
+@param void
+@return void
+*/
+
 function sPartida(){
-    let resetAll = document.createElement("button");
+
+    //Recorre el tablero, vaciando todas las casillas y devolviendo el evento "onclick"
     for(let i=0;i<9;i++){
         casillas[i].textContent="";
         casillas[i].setAttribute("onclick",`agregarFicha(${i})`);
+        casillas[i].classList.remove('verdesito');
+        casillas[i].classList.remove('rojito');
     }
+
+    //Estas son variables que se necesitan resetear cuando se empieza una nueva ronda
+    turnoclase[0].textContent="Jugador 1 esta jugando";
+    boton[0].textContent="Reset";
     combinacionO=[];
     combinacionX=[];
     turno=true;
+    valganador=false;
 }
 /**
  * Para acabar el juego necesitamos:
