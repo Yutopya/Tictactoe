@@ -154,7 +154,7 @@ function agregarFicha(numero){
             if(puntX>=3){
 
                 //Se llama a la funcion ganador asignandole el id del jugador que ha ganado
-                ganador(0);
+                setTimeout(function(){ganador(0)},50);
                 puntX=0;
                 valganador=true;
 
@@ -165,7 +165,7 @@ function agregarFicha(numero){
             
             //Lo mismo pero con el otro jugador
             if(puntO>=3){
-                ganador(1);
+                setTimeout(function(){ganador(1)},50);
                 puntO=0;
                 valganador=true;
             }else if(puntO<3){
